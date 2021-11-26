@@ -87,7 +87,7 @@ function fillUpData(range, measurement, host, aggregateWindow, chart, id, unit){
             if (id == "bulb_bathroom") {
                 if (latestData > 50) {
                     document.getElementById("bulb_bathroom").classList.add("text-warning");
-                    document.getElementById("bulb_desc_bathroom").innerHTML = "Inside the Bathroom is bright and shine";
+                    document.getElementById("bulb_desc_bathroom").innerHTML = "Currently inside the Bathroom is bright, maybe someone is using!";
                 }
             } else {
                 document.getElementById(id).innerHTML = latestData + unit;
