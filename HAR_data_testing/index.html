@@ -1,83 +1,108 @@
 <!DOCTYPE html>
 <html lang="en" >
-  <head>
-    <meta charset="UTF-8">
-    <title>HAR System</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script type="module">
-      // import latest release from npm repository 
-      import {InfluxDB, Point} from 'https://unpkg.com/@influxdata/influxdb-client/dist/index.browser.mjs';
-      
-      const url = 'https://eu-central-1-1.aws.cloud2.influxdata.com/'
-      const token = 'Smrm037Xfq6s4RzcMRkik81q9S6zO8LY8u6mDxPUyOoFmvlrz9C12P63a2eF_xrrrPR8YoIbEBmavRM1yszdaw=='
-      const org = 'yuanjen.hung@student.supsi.ch'
-      const bucket = 'HAR_system'
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAR System</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
+</head>
+<body>
+<header class="navbar navbar-light sticky-top bg-light flex-md-nowrap py-3 px-2" style="z-index: 10000;">
+  <a href="#" class="navbar-brand col-md-3 col-lg-2 me-0 px-3 d-flex align-items-center">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-apple me-3" viewBox="0 0 16 16">
+      <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516.024.034 1.52.087 2.475-1.258.955-1.345.762-2.391.728-2.43zm3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422.212-2.189 1.675-2.789 1.698-2.854.023-.065-.597-.79-1.254-1.157a3.692 3.692 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56.244.729.625 1.924 1.273 2.796.576.984 1.34 1.667 1.659 1.899.319.232 1.219.386 1.843.067.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758.347-.79.505-1.217.473-1.282z"/>
+      <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516.024.034 1.52.087 2.475-1.258.955-1.345.762-2.391.728-2.43zm3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422.212-2.189 1.675-2.789 1.698-2.854.023-.065-.597-.79-1.254-1.157a3.692 3.692 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56.244.729.625 1.924 1.273 2.796.576.984 1.34 1.667 1.659 1.899.319.232 1.219.386 1.843.067.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758.347-.79.505-1.217.473-1.282z"/>
+    </svg> HAR project
+  </a>
+  
+  <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</header>
 
-      const client = new InfluxDB({ url, token });
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-xl-2 d-md-block bg-light  sticky-top collapse sidebar" style="top: 75px;">
+      <div class="sticky-top pt-3 pb-3" style="top: 75px;">
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-item mb-1">
+            <a class="nav-link link-dark" aria-current="page" href="#">
+							<span class="fas fa-th-large me-2"></span>
+              Dashboard
+            </a>
 
-      const queryApi = client.getQueryApi(org);
+          </li>
+          <li class="nav-item mb-1">
+            <a class="nav-link active" href="#">
+              <span class="fas fa-home me-2"></span>
+              Ambient data
+            </a>
+          </li>
+          <li class="nav-item mb-1">
+            <a class="nav-link link-dark" href="#">
+              <span class="fas fa-heartbeat me-2"></span>
+              Health report
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-      const data = {
-        labels: [],
-        datasets: [{
-            label: 'Temperature (Bathroom)',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [],
-        }]
-      };
+    <main class="col-md-9 col-xl-10 ms-sm-auto p-5" style="min-height: calc(100vh - 80px)">
+      <div class="row">
+        <h3 class="col-xs-12 display-6 mb-4">Bathroom Weather</h3>
+      </div>
+      <div class="row">
+        <a class="col-xs-12 mb-4 text-decoration-none link-dark" data-bs-toggle="collapse" href="#collapseBathLight" role="button" aria-expanded="false" aria-controls="collapseBathLight">
+          <div class="card card-body rounded shadow">
+            <div class="card-body">
+              <h1 id="bulb_bathroom" class="fas fa-lightbulb"></h3>
+              <p  id="bulb_desc_bathroom"class="card-text lead">Inside the Bathroom is dark</p>
+            </div>
+            <div class="collapse mt-3 mb-4" id="collapseBathLight">
+              <canvas id="bathLightChart"></canvas>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="row">
+        <a class="col-sm-12 col-lg-6 col-xl-4 mb-4 text-decoration-none link-dark" data-bs-toggle="collapse" href="#collapseBathTemp" role="button" aria-expanded="false" aria-controls="collapseBathTemp">
+          <div class="card card-body rounded shadow">
+            <h3 class="fas fa-thermometer-half card-img-top"></h3>
+            <div class="card-body">
+              <h1 id="temp_bathroom" class="card-title display-4">24°C</h5>
+              <p class="card-text lead">Temperature</p>
+            </div>
+            <div class="collapse mt-2 mb-3" id="collapseBathTemp">
+              <canvas id="bathTempChart"></canvas>
+            </div>
+          </div>
+        </a>
+        <a class="col-sm-12 col-lg-6 col-xl-4 mb-4 text-decoration-none link-dark" data-bs-toggle="collapse" href="#collapseBathHumi" role="button" aria-expanded="false" aria-controls="collapseBathHumi"">
+          <div class="card card-body rounded shadow">
+            <h3 class="fas fa-tint card-img-top"></h3>
+            <div class="card-body">
+              <h1 id="humi_bathroom" class="card-title display-4">45%</h5>
+              <p class="card-text lead">Humidity</p>
+            </div>
+            <div class="collapse mt-2 mx-2 mb-3" id="collapseBathHumi">
+              <canvas id="bathHumiChart"></canvas>
+            </div>
+          </div>
+        </a>
+      </div>
 
-      const config = {
-        type: 'line',
-        data: data,
-        options: { 
-          plugins: { 
-            tooltip: { 
-              callbacks: { 
-                label: function(context) {
-                    return context.parsed.y + ' °C';
-                }
-              } 
-            } 
-          }
-        }
-      };
+			
 
-      const myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-      );
+    </main>
+  </div>
+</div>
 
-      function addData(chart, label, data) {
-        chart.data.labels.push(label);
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data.push(data);
-        });
-        chart.update();
-      }
-
-      const query = `from(bucket: "HAR_system") |> range(start: -1h) |> filter(fn: (r) => r["_measurement"] == "temperature") |> filter(fn: (r) => r["_field"] == "value") |> filter(fn: (r) => r["host"] == "arduino_bathroom")`;
-      queryApi.queryRows(query, {
-        next(row, tableMeta) {
-          const o = tableMeta.toObject(row);
-          const minute = o._time.split(":");
-          console.log(`${minute[1]}\t${o._measurement}(${o._field}) = ${o._value}`);
-          addData(myChart, minute[1], o._value);
-        },
-        error(error) {
-          console.error(error);
-          console.log('Finished ERROR');
-        },
-        complete() {
-          console.log('Finished SUCCESS');
-        },
-      })
-    </script>
-
-  </head>
-  <body>
-    <canvas id="myChart"></canvas>
-    <!-- <script src="./js/script.js"></script> -->
-  </body>
+<script src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js'></script>
+<script src='https://use.fontawesome.com/e7829019f2.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="./js/script.js" type="module"></script>
+</body>
 </html>
