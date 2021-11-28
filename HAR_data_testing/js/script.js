@@ -70,11 +70,11 @@ function fillUpData(range, measurement, host, aggregateWindow, chart, id, unit){
             const o = tableMeta.toObject(row);
             const timeFormat = o._time.slice(o._time.indexOf("T")+1, o._time.indexOf("Z"));
             const timeBuffer = timeFormat.split(":");
-            const hour = timeBuffer[0];
+            const hour = (+timeBuffer[0] + 1) % 24;
             const minute = timeBuffer[1];
             const second = timeBuffer[2];
             console.log(`${timeFormat}\t${o._measurement}(${o._field}) = ${o._value.toFixed(1)}`);
-            addData(chart, `${timeBuffer[0]}:${timeBuffer[1]}`, o._value.toFixed(1));
+            addData(chart, `${hour}:${minute}`, o._value.toFixed(1));
             latestData = o._value.toFixed(1);
         },
         error(error) {
@@ -85,7 +85,7 @@ function fillUpData(range, measurement, host, aggregateWindow, chart, id, unit){
             console.log('Finished SUCCESS');
             console.log(latestData);
             if (id.includes("bulb")) {
-                if (latestData > 50) {
+                if (latestData > 20) {
                     document.getElementById(id).classList.add("text-warning");
                     document.getElementById(id + "_desc").innerHTML = "Currently inside is bright and shine, maybe someone is using!";
                 }
